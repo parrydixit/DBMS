@@ -5,16 +5,12 @@ SQL> create table books(
   5  publisher varchar2(20),
   6  primary key(isbn));
 
-Table created.
-
 SQL> create table students(
   2  usn varchar2(10),
   3  name char(20),
   4  semester Int,
   5  department varchar2(10),
   6  primary key(usn));
-
-Table created.
 
 SQL> create table borrow(
   2  isbn varchar2(20),
@@ -24,45 +20,12 @@ SQL> create table borrow(
   6  foreign key(isbn) references books(isbn),
   7  primary key(isbn, usn));
 
-Table created.
 
 SQL> insert into books values('&isbn','&title','&author','&publisher');
 
-SQL> select * from books;
-
-ISBN		     TITLE		  AUTHOR     PUBLISHER
--------------------- -------------------- ---------- --------------------
-ISB123		     DATA		  PRANJAL    TATA
-ISB345		     PL/SQL		  IVAN	     GOYAL
-ISB334		     DMS		  KOLMAN     PEARSON
-ISB554		     BLOCKCHAIN 	  IMRAN      SVS
-ISB43		     CLOUD		  DONALD     ELSEVLER
-
 SQL> insert into students values('&usn','&name',&semester,'&department');
 
-SQL> SELECT * FROM STUDENTS;
-
-USN	   NAME 		  SEMESTER DEPARTMENT
----------- -------------------- ---------- ----------
-IS086	   PRANJAL D			 5 ISE
-ME059	   HIMANSHU			 5 MECH
-CS149	   ARPIT			 5 CSE
-ISO84	   BHAGYA			 5 ISE
-IS103	   SANCHI			 5 ISE
-IS073	   FARHAN			 5 ISE
-
-
 SQL> insert into borrow values('&isbn','&usn','&dates');
-
-SQL> SELECT * FROM BORROW;
-
-ISBN		     USN		  DATES
--------------------- -------------------- ---------
-ISB123		     IS086		  12-DEC-21
-ISB123		     ME059		  21-MAR-22
-ISB345		     CS149		  17-OCT-21
-ISB554		     IS103		  24-NOV-21
-ISB43		     IS086		  10-JAN-22
 
 
 (D1)
@@ -71,12 +34,6 @@ SQL> select name
   3  where usn in (
   4  select usn from borrow
   5  where isbn='ISB123' or isbn='ISB345');
-
-NAME
---------------------
-ARPIT
-PRANJAL D
-HIMANSHU
 
 
 (D2)
@@ -87,23 +44,11 @@ SQL> select name from students
   5  select isbn from books
   6  where title= 'DATA'));
 
-NAME
---------------------
-PRANJAL D
-HIMANSHU
-
 
 (D3)
 SQL> select name,gender,semester,department, count(isbn) from students,borrow
 where students.usn=borrow.usn
 group by name;
-
-COUNT(ISBN)
------------
-	  1
-	  1
-	  2
-	  1
 
 
 (D4)
