@@ -21,33 +21,9 @@ create table reserve(
 
 insert into boat values('&bid','&bname','bcolor');
 
-bid	bname	bcolor
-b01	wave	blue
-b02	ocean	red
-b03	well	white
-b04	pond	green
-b05	sea	    black
-
 insert into sailor values('&sid','&sname',&age,'&rating');
 
-sid	sname	age	rating
-s01	pranjal	20	good
-s02	bhagya	20	good
-s03	ayush	19	exe
-s04	arpit	20	bad
-s05	farhan	20	good
-s06	wave	20	bad
-
 insert into reserve values('&bid','&sid','&day');
-
-bid	sid	day
-b01	s01	wed
-b02	s01	thu
-b02	s04	fri
-b04	s05	sat
-b05	s02	sun
-b04	s01	mon
-b02	s02	tue
 
 
 (D1)
@@ -55,25 +31,11 @@ select * from boat where bid in(
   select bid from reserve where sid in(
     select sid from sailor where sname='pranjal'));
 
-bid	bname	bcolor
-b01	wave	blue
-b02	ocean	red
-b04	pond	green
-
 
 (D2)
 select bid, sname
 from reserve r join sailor s
 on (r.sid==s.sid);
-
-bid	sname
-b01	pranjal
-b02	pranjal
-b02	bhagya
-b02	arpit
-b04	pranjal
-b04	farhan
-b05	bhagya
 
 
 (D3)
@@ -81,20 +43,12 @@ select sname, count(bid) from sailor,reserve
 where reserve.sid=sailor.sid
 group by sname;
 
-sname	count(bid)
-arpit	1
-bhagya	2
-farhan	1
-pranjal	3
-
 
 (D4)
 select bname,bid,bcolor,sname
 from boat b join sailor s
 on (b.bname=s.sname);
 
-bname	bid	bcolor	sname
-wave	b01	blue	wave
 
 
 
