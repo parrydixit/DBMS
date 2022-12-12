@@ -1,0 +1,158 @@
+SQL> create table books(
+  2  isbn varchar2(20),
+  3  title varchar2(20),
+  4  author char(10),
+  5  publisher varchar2(20),
+  6  primary key(isbn));
+
+Table created.
+
+SQL> create table students(
+  2  usn varchar2(10),
+  3  name char(20),
+  4  semester Int,
+  5  department varchar2(10),
+  6  primary key(usn));
+
+Table created.
+
+SQL> create table borrow(
+  2  isbn varchar2(20),
+  3  usn varchar2(20),
+  4  dates date,
+  5  foreign key(usn) references students(usn),
+  6  foreign key(isbn) references books(isbn),
+  7  primary key(isbn, usn));
+
+Table created.
+
+SQL> insert into books values('&isbn','&title','&author','&publisher');
+
+SQL> select * from books;
+
+ISBN		     TITLE		  AUTHOR     PUBLISHER
+-------------------- -------------------- ---------- --------------------
+ISB123		     DATA		  PRANJAL    TATA
+ISB345		     PL/SQL		  IVAN	     GOYAL
+ISB334		     DMS		  KOLMAN     PEARSON
+ISB554		     BLOCKCHAIN 	  IMRAN      SVS
+ISB43		     CLOUD		  DONALD     ELSEVLER
+
+SQL> insert into students values('&usn','&name',&semester,'&department');
+
+SQL> SELECT * FROM STUDENTS;
+
+USN	   NAME 		  SEMESTER DEPARTMENT
+---------- -------------------- ---------- ----------
+IS086	   PRANJAL D			 5 ISE
+ME059	   HIMANSHU			 5 MECH
+CS149	   ARPIT			 5 CSE
+ISO84	   BHAGYA			 5 ISE
+IS103	   SANCHI			 5 ISE
+IS073	   FARHAN			 5 ISE
+
+
+SQL> insert into borrow values('&isbn','&usn','&dates');
+
+SQL> SELECT * FROM BORROW;
+
+ISBN		     USN		  DATES
+-------------------- -------------------- ---------
+ISB123		     IS086		  12-DEC-21
+ISB123		     ME059		  21-MAR-22
+ISB345		     CS149		  17-OCT-21
+ISB554		     IS103		  24-NOV-21
+ISB43		     IS086		  10-JAN-22
+
+
+(D1)
+SQL> select name
+  2  from students
+  3  where usn in (
+  4  select usn from borrow
+  5  where isbn='ISB123' or isbn='ISB345');
+
+NAME
+--------------------
+ARPIT
+PRANJAL D
+HIMANSHU
+
+
+(D2)
+SQL> select name from students
+  2  where gender=f and usn in(
+  3  select usn from borrow
+  4  where isbn in (
+  5  select isbn from books
+  6  where title= 'DATA'));
+
+NAME
+--------------------
+PRANJAL D
+HIMANSHU
+
+
+(D3)
+SQL> select name,gender,semester,department, count(isbn) from students,borrow
+where students.usn=borrow.usn
+group by name;
+
+COUNT(ISBN)
+-----------
+	  1
+	  1
+	  2
+	  1
+
+
+(D4)
+select isbn, title, author from books 
+where books.title like 'da%' and books.isbn not in(
+  select isbn from borrow);
+
+
+
+PL/SQL
+
+declare
+        a number;
+        b number;
+        c number;
+        n number;
+        i number;
+
+begin
+        n:= 8;
+        a:= 0;
+        b:= 1;
+                dbms_output.put_line(a);
+                dbms_output.put_line(b);
+
+        for i in 1..n-2
+                loop
+                        c:= a+b;
+                        dbms_output.put_line(c);
+                        a:= b;
+                        b:= c;
+                end loop;
+
+end;
+/
+
+
+SQL> set serveroutput on 
+SQL> @fibonacci.sql
+0
+1
+1
+2
+3
+5
+8
+13
+
+PL/SQL procedure successfully completed.
+
+
+

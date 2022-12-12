@@ -1,0 +1,127 @@
+create table emp_1(
+ssn varchar2(10),
+name char(10),
+dept_no number(10),
+primary key(ssn));
+
+
+create table proj(
+proj_no varchar2(10),
+proj_area varchar2(10),
+primary key(proj_no));
+
+
+create table assign(
+essn varchar2(10),
+proj_no varchar2(10),
+foreign key(essn) references emp_1(ssn));
+
+Table created.
+
+alter table assign
+modify proj_no varchar2(10) references proj(proj_no);
+
+Table altered.
+
+
+
+insert into emp_1 values('&ssn','&name',&dept_no);  // insert the values
+SELECT * FROM EMP_1
+;
+
+SSN	   NAME 	 DEPT_NO
+---------- ---------- ----------
+E01	   PRANJAL	       1
+E02	   FARHAN	       2
+E03	   BHAGYA	       3
+E04	   AYUSH	       3
+E05	   ARPIT	       2
+
+
+insert into proj values('&proj_no','&proj_area'); // insert the values
+SELECT * FROM PROJ;
+
+PROJ_NO    PROJ_AREA
+---------- ----------
+P01	   DATABASE
+P02	   CLOUD
+P03	   IOT
+P04	   NETWORKS
+P05	   BLOCK
+
+
+INSERT INTO ASSIGN VALUES('&essn','&proj_no');  // insert the values
+SELECT * FROM ASSIGN;
+
+ESSN	   PROJ_NO
+---------- ----------
+E01	   P04
+E02	   P01
+E03	   P04
+E04	   P04
+E05	   P02
+E05	   P05
+
+
+
+(D1) 
+
+select ssn, name from emp_1
+where ssn in (select essn from assign
+where proj_no= (select proj_no from proj
+where proj_area='DATABASE'));
+
+SSN	   NAME
+---------- ----------
+E02	   FARHAN
+
+
+(D2) 
+
+select count(ssn), dept_no from emp_1
+group by dept_no;
+
+COUNT(SSN)    DEPT_NO
+---------- ----------
+	 1	    1
+	 2	    2
+	 2	    3
+
+
+(D3) 
+
+update assign set proj_no='P01'
+where essn= 'E03';
+
+1 row updated.
+
+select * from assign
+;
+
+ESSN	   PROJ_NO
+---------- ----------
+E01	   P04
+E02	   P01
+E03	   P01
+E04	   P04
+E05	   P02
+E05	   P05
+
+
+(D4) 
+
+select essn,count(proj_no) from assign
+group by essn
+having count(proj_no)<=2;
+
+
+
+PL/SQL
+
+BEGIN
+	update emp_1
+	SET salary= 1.15*salary
+	where dept_no=3;
+	dbms_output.put_line('number of rows updated are: ' || sql%row count);
+END
+/
